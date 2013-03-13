@@ -17,9 +17,11 @@ import com.activequant.trading.DefaultTransportExchange;
 import com.activequant.trading.OHLCDataFeedAdapter;
 
 /**
+ * This is an example of an OHLC Feed subscriber that calculates a FAST and a
+ * SLOW EMA to derive crossover signals and to place simple market orders.
  * 
  * @author GhostRider
- *
+ * 
  */
 public class OHLCFeedSample extends ComponentBase {
 
@@ -60,10 +62,11 @@ public class OHLCFeedSample extends ComponentBase {
 	 * process incoming ohlc data
 	 * 
 	 * @param ohlcv
-	 * @throws IncompleteOrderInstructions 
-	 * @throws UnsupportedOrderType 
+	 * @throws IncompleteOrderInstructions
+	 * @throws UnsupportedOrderType
 	 */
-	private void process(OHLCV ohlcv) throws UnsupportedOrderType, IncompleteOrderInstructions {
+	private void process(OHLCV ohlcv) throws UnsupportedOrderType,
+			IncompleteOrderInstructions {
 		//
 		double formerFastEma = fastEma.getLastEma();
 		double formerSlowEma = slowEma.getLastEma();
@@ -80,9 +83,9 @@ public class OHLCFeedSample extends ComponentBase {
 			mo.setOrderSide(OrderSide.SELL);
 			mo.setQuantity(1.0);
 			mo.setTradInstId(mdiId);
-			dex.prepareOrder(mo).submit(); 
+			dex.prepareOrder(mo).submit();
 		} else if (formerFastEma < formerSlowEma && newFastEma > newSlowEma) {
-			// long crossing. 
+			// long crossing.
 			MarketOrder mo = new MarketOrder();
 			mo.setOrderSide(OrderSide.BUY);
 			mo.setQuantity(1.0);
