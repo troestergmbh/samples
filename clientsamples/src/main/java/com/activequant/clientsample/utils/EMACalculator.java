@@ -1,4 +1,4 @@
-package com.activequant;
+package com.activequant.clientsample.utils;
 
 import com.activequant.domainmodel.TimeFrame;
 import com.activequant.domainmodel.TimeStamp;

@@ -1,9 +1,10 @@
-package com.activequant;
+package com.activequant.clientsample;
 
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import com.activequant.clientsample.utils.EMACalculator;
 import com.activequant.component.ComponentBase;
 import com.activequant.domainmodel.OHLCV;
 import com.activequant.domainmodel.TimeFrame;

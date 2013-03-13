@@ -1,4 +1,4 @@
-package com.activequant;
+package com.activequant.clientsample;
 
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
