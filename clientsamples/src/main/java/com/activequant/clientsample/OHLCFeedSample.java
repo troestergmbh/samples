@@ -16,6 +16,11 @@ import com.activequant.interfaces.transport.ITransportFactory;
 import com.activequant.trading.DefaultTransportExchange;
 import com.activequant.trading.OHLCDataFeedAdapter;
 
+/**
+ * 
+ * @author GhostRider
+ *
+ */
 public class OHLCFeedSample extends ComponentBase {
 
 	// which instrument this one will run on.

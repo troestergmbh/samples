@@ -7,6 +7,11 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import com.activequant.component.ComponentBase;
 import com.activequant.interfaces.transport.ITransportFactory;
 
+/**
+ * 
+ * @author GhostRider
+ *
+ */
 public class BasicComponentSample extends ComponentBase {
 
 	public BasicComponentSample(ITransportFactory transFac)
@@ -18,7 +23,6 @@ public class BasicComponentSample extends ComponentBase {
 	public String getDescription() {
 		return "The most basic component";
 	}
-
 	
 	/**
 	 * It is possible to run components from within a ComponentServer or from a main. 
