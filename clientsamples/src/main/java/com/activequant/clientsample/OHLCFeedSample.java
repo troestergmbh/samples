@@ -20,6 +20,7 @@ import com.activequant.trading.OHLCDataFeedAdapter;
  * This is an example of an OHLC Feed subscriber that calculates a FAST and a
  * SLOW EMA to derive crossover signals and to place simple market orders.
  * 
+ * 
  * @author GhostRider
  * 
  */
