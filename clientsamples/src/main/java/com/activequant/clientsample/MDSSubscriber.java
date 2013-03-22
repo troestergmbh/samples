@@ -8,6 +8,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.activequant.component.ComponentBase;
 import com.activequant.domainmodel.streaming.MarketDataSnapshot;
+import com.activequant.domainmodel.streaming.Tick;
 import com.activequant.interfaces.transport.ITransportFactory;
 import com.activequant.trading.MarketDataFeedAdapter;
 
@@ -19,13 +20,20 @@ import com.activequant.trading.MarketDataFeedAdapter;
 public class MDSSubscriber extends ComponentBase {
 
 	// which instrument this one will run on.
-	private String mdiId = "PATS.MDI.SFE.S_IRM3";
+	private String mdiId = "PATS.MDI.CME.GEU3";
 
+	// 
 	public MDSSubscriber(ITransportFactory transFac) throws Exception {
 		super("MDSSubscriber", transFac);
 		
 		final DecimalFormat dcf = new DecimalFormat("#.#####"); 
 		MarketDataFeedAdapter mdf = new MarketDataFeedAdapter(mdiId, transFac) {
+			
+			@Override
+			public void processTick(Tick t){
+				System.out.println("Tick: " + t);
+			}
+			
 			@Override
 			public void processMarketDataSnapshot(
 					MarketDataSnapshot mds) {
