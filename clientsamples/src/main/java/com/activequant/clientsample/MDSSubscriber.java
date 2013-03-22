@@ -29,7 +29,11 @@ public class MDSSubscriber extends ComponentBase {
 			@Override
 			public void processMarketDataSnapshot(
 					MarketDataSnapshot mds) {
-				System.out.println(mds);
+				if(mds.isResend()){
+					System.out.println("Resent. Bailing out. ");
+					return; 
+				}
+				System.out.println(mds + " // " + mds.getBidSizes()[0] + " " + mds.getAskSizes()[0]);
 				double cumBidSize = 0.0 ;
 				double cumAskSize = 0.0 ;
 				double avgBidPrice = 0.0; 
