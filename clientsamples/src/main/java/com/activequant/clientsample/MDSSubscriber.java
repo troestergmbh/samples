@@ -45,16 +45,12 @@ public class MDSSubscriber extends ComponentBase {
 				double cumBidSize = 0.0 ;
 				double cumAskSize = 0.0 ;
 				double avgBidPrice = 0.0; 
-				double avgAskPrice = 0.0;
-				// 
-				int askCount =0; 
-				int bidCount =0;
+				double avgAskPrice = 0.0;			
 				// 
 				for(int i=0;i<mds.getAskSizes().length;i++){
 					if(mds.getAskSizes()[i]!=Double.NaN){
 						cumAskSize += mds.getAskSizes()[i];
 						avgAskPrice += mds.getAskPrices()[i] * mds.getAskSizes()[i];
-						askCount++; 
 					}
 				}
 								
@@ -62,7 +58,6 @@ public class MDSSubscriber extends ComponentBase {
 					if(mds.getBidSizes()[i]!=Double.NaN){
 						cumBidSize += mds.getBidSizes()[i];
 						avgBidPrice += mds.getBidPrices()[i] * mds.getBidSizes()[i];
-						bidCount++; 
 					}
 				}
 				
