@@ -14,11 +14,19 @@ import com.activequant.interfaces.transport.ITransportFactory;
  */
 public class BasicComponentSample extends ComponentBase {
 
+	/**
+	 * 
+	 * @param transFac
+	 * @throws Exception
+	 */
 	public BasicComponentSample(ITransportFactory transFac)
 			throws Exception {
 		super("BasicComponentSample", transFac);
 	}
 
+	/**
+	 * 
+	 */
 	@Override
 	public String getDescription() {
 		return "The most basic component";
