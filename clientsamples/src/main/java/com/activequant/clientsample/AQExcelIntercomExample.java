@@ -16,6 +16,7 @@ public class AQExcelIntercomExample extends ComponentBase {
 
 	public AQExcelIntercomExample(ITransportFactory transFac) throws Exception {
 		super("AQExcelIntercom", transFac);
+		
 
 	}
 
@@ -24,6 +25,12 @@ public class AQExcelIntercomExample extends ComponentBase {
 		return "An AQExcel intercommunication example. ";
 	}
 
+	/**
+	 * Users can "submit"/send values from Excel to channels on an AQ Master Server. 
+	 * They will arrive in this function. 
+	 * 
+	 * @param valueSet
+	 */
 	protected void handle(ValueSet valueSet){
 		// value sets are a bit dumb. 
 		String field = valueSet.getField();
@@ -31,9 +38,8 @@ public class AQExcelIntercomExample extends ComponentBase {
 		String type = valueSet.getType();
 		// ... they deliver everything as string. 
 		String value = valueSet.getValue();
-		// just a start ... 
 		
-		// 
+		System.out.println("Received: " + value);
 	}
 	
 	
