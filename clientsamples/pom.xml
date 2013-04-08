@@ -16,6 +16,7 @@
 
   <repositories>
      <repository>
+     	<!--  user name and password available on request. -->
 			<id>aq3rdparty</id>
 			<url>http://activequant.org/m2/3rdparty</url>
 		</repository>
