@@ -13,7 +13,6 @@ import com.activequant.interfaces.dao.IDaoFactory;
 import com.activequant.interfaces.transport.ITransportFactory;
 import com.activequant.messages.AQMessages.BaseMessage;
 import com.activequant.messages.MessageFactory;
-import com.activequant.utils.ArrayUtils;
 import com.xeiam.xchange.Exchange;
 import com.xeiam.xchange.ExchangeFactory;
 import com.xeiam.xchange.currency.Currencies;
@@ -22,29 +21,21 @@ import com.xeiam.xchange.mtgox.v1.MtGoxExchange;
 import com.xeiam.xchange.service.marketdata.polling.PollingMarketDataService;
 
 /**
- * 
- * @author GhostRider
- *
+ * @author GhostRider, phaze9
  */
-public class MtGoxStreamingFeed extends ComponentBase {
+public class MtGoxFeed extends ComponentBase {
 
 	// to construct byte messages. 
 	private MessageFactory mf = new MessageFactory();
-	/**
-	 * 
-	 * @param transFac
-	 * @throws Exception
-	 */
-	public MtGoxStreamingFeed(ITransportFactory transFac, IDaoFactory daoFactory)
+
+	public MtGoxFeed(ITransportFactory transFac, IDaoFactory daoFactory)
 			throws Exception {
-		super("MtGoxStreamingFeed", transFac);
-		// 
+		super("MtGoxFeed", transFac);
 		init(daoFactory);
 	}
 	
 	public void init(IDaoFactory daoFactory) throws Exception {
         Exchange mtGox = ExchangeFactory.INSTANCE.createExchange(MtGoxExchange.class.getName());
-        //StreamingExchangeService exchangeService = mtGox.getStreamingExchangeService();
         PollingMarketDataService marketDataService = mtGox.getPollingMarketDataService();
         List<Double> bidPxList = new ArrayList<Double>();
         List<Double> askPxList = new ArrayList<Double>();
@@ -68,9 +59,9 @@ public class MtGoxStreamingFeed extends ComponentBase {
             askQList.add(100000.0);
             // 
             System.out.println(ticker);
-            Thread.sleep(10000);
             BaseMessage bm = mf.buildMds("MTGOX.BTC/USD", bidPxList, askPxList, bidQList, askQList, false);
             transFac.getPublisher(ETransportType.MARKET_DATA, "MTGOX.BTC/USD").send(bm.toByteArray());
+            Thread.sleep(10000);
         }
     }
 
@@ -92,6 +83,6 @@ public class MtGoxStreamingFeed extends ComponentBase {
 		// first, let's get the spring context. 
 		ApplicationContext appContext = new ClassPathXmlApplicationContext(
 				new String[] { "fwspring.xml" });
-		new MtGoxStreamingFeed(appContext.getBean(ITransportFactory.class), appContext.getBean(IDaoFactory.class));
+		new MtGoxFeed(appContext.getBean(ITransportFactory.class), appContext.getBean(IDaoFactory.class));
 	}
 }
