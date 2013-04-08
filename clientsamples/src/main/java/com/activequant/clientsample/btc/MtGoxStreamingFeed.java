@@ -57,6 +57,11 @@ public class MtGoxStreamingFeed extends ComponentBase {
             Double bid = ticker.getBid().getAmount().doubleValue();
             Double ask = ticker.getAsk().getAmount().doubleValue();
             // 
+            bidPxList.clear();
+            askPxList.clear();
+            bidQList.clear();
+            askQList.clear();
+            // 
             bidPxList.add(bid);
             askPxList.add(ask);
             bidQList.add(100000.0);
