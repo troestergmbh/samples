@@ -6,6 +6,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.activequant.component.ComponentBase;
 import com.activequant.domainmodel.MarketDataInstrument;
+import com.activequant.domainmodel.TradeableInstrument;
 import com.activequant.interfaces.dao.IDaoFactory;
 import com.activequant.interfaces.transport.ITransportFactory;
 
@@ -33,6 +34,10 @@ public class MDIInitializer extends ComponentBase {
 		MarketDataInstrument mdi = new MarketDataInstrument("MTGOX", "BTC/USD");
 		daoFactory.mdiDao().delete(mdi);
 		daoFactory.mdiDao().create(mdi);
+		TradeableInstrument tdi = new TradeableInstrument("MTGOX", "BTC/USD");
+		daoFactory.tradeableDao().delete(tdi);
+		daoFactory.tradeableDao().create(tdi);
+		System.exit(0);
 	}
 
 	/**
