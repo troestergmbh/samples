@@ -58,8 +58,8 @@ public class MtGoxFeed extends ComponentBase {
 				List<Double> bidQList = new ArrayList<Double>();
 				List<Double> askQList = new ArrayList<Double>();
 				//
-				Ticker ticker = marketDataService.getTicker(pair.counterCurrency,
-						pair.baseCurrency);
+				Ticker ticker = marketDataService.getTicker(pair.baseCurrency,
+                        pair.counterCurrency);
 				Double bid = ticker.getBid().getAmount().doubleValue();
 				Double ask = ticker.getAsk().getAmount().doubleValue();
 				//
@@ -74,13 +74,13 @@ public class MtGoxFeed extends ComponentBase {
 				askQList.add(100000.0);
 				//
 				System.out.println(ticker);
-				BaseMessage bm = mf.buildMds("MTGOX." + pair.counterCurrency + "/"
-						+ pair.baseCurrency, bidPxList, askPxList, bidQList,
+				BaseMessage bm = mf.buildMds("MTGOX." + pair.baseCurrency + "/"
+						+ pair.counterCurrency, bidPxList, askPxList, bidQList,
 						askQList, false);
 				transFac.getPublisher(
 						ETransportType.MARKET_DATA,
-						"MTGOX." + pair.counterCurrency + "/"
-								+ pair.baseCurrency).send(bm.toByteArray());
+						"MTGOX." + pair.baseCurrency + "/"
+								+ pair.counterCurrency).send(bm.toByteArray());
 			}
 			Thread.sleep(20000);
 
