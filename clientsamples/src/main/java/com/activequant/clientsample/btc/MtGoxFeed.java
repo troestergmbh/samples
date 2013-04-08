@@ -1,5 +1,6 @@
 package com.activequant.clientsample.btc;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +17,7 @@ import com.activequant.messages.MessageFactory;
 import com.xeiam.xchange.Exchange;
 import com.xeiam.xchange.ExchangeFactory;
 import com.xeiam.xchange.currency.Currencies;
+import com.xeiam.xchange.currency.CurrencyPair;
 import com.xeiam.xchange.dto.marketdata.Ticker;
 import com.xeiam.xchange.mtgox.v1.MtGoxExchange;
 import com.xeiam.xchange.service.marketdata.polling.PollingMarketDataService;
@@ -25,7 +27,7 @@ import com.xeiam.xchange.service.marketdata.polling.PollingMarketDataService;
  */
 public class MtGoxFeed extends ComponentBase {
 
-	// to construct byte messages. 
+	// to construct byte messages.
 	private MessageFactory mf = new MessageFactory();
 
 	public MtGoxFeed(ITransportFactory transFac, IDaoFactory daoFactory)
@@ -33,37 +35,59 @@ public class MtGoxFeed extends ComponentBase {
 		super("MtGoxFeed", transFac);
 		init(daoFactory);
 	}
-	
+
 	public void init(IDaoFactory daoFactory) throws Exception {
-        Exchange mtGox = ExchangeFactory.INSTANCE.createExchange(MtGoxExchange.class.getName());
-        PollingMarketDataService marketDataService = mtGox.getPollingMarketDataService();
-        List<Double> bidPxList = new ArrayList<Double>();
-        List<Double> askPxList = new ArrayList<Double>();
-        List<Double> bidQList = new ArrayList<Double>();
-        List<Double> askQList = new ArrayList<Double>();
-        
-        while ( true ) {
-        	// 
-            Ticker ticker = marketDataService.getTicker(Currencies.BTC, Currencies.USD);
-            Double bid = ticker.getBid().getAmount().doubleValue();
-            Double ask = ticker.getAsk().getAmount().doubleValue();
-            // 
-            bidPxList.clear();
-            askPxList.clear();
-            bidQList.clear();
-            askQList.clear();
-            // 
-            bidPxList.add(bid);
-            askPxList.add(ask);
-            bidQList.add(100000.0);
-            askQList.add(100000.0);
-            // 
-            System.out.println(ticker);
-            BaseMessage bm = mf.buildMds("MTGOX.BTC/USD", bidPxList, askPxList, bidQList, askQList, false);
-            transFac.getPublisher(ETransportType.MARKET_DATA, "MTGOX.BTC/USD").send(bm.toByteArray());
-            Thread.sleep(10000);
-        }
-    }
+		Exchange mtGox = ExchangeFactory.INSTANCE
+				.createExchange(MtGoxExchange.class.getName());
+		PollingMarketDataService marketDataService = mtGox
+				.getPollingMarketDataService();
+
+		
+
+		while (true) {
+
+			List<CurrencyPair> pairs = marketDataService.getExchangeSymbols();
+
+			for (CurrencyPair pair : pairs) {
+				if(pair.counterCurrency.equals("BTC"))continue; 
+				//
+				System.out.println(pair);
+				//
+				List<Double> bidPxList = new ArrayList<Double>();
+				List<Double> askPxList = new ArrayList<Double>();
+				List<Double> bidQList = new ArrayList<Double>();
+				List<Double> askQList = new ArrayList<Double>();
+				//
+				Ticker ticker = marketDataService.getTicker(pair.counterCurrency,
+						pair.baseCurrency);
+				Double bid = ticker.getBid().getAmount().doubleValue();
+				Double ask = ticker.getAsk().getAmount().doubleValue();
+				//
+				bidPxList.clear();
+				askPxList.clear();
+				bidQList.clear();
+				askQList.clear();
+				//
+				bidPxList.add(bid);
+				askPxList.add(ask);
+				bidQList.add(100000.0);
+				askQList.add(100000.0);
+				//
+				System.out.println(ticker);
+				BaseMessage bm = mf.buildMds("MTGOX." + pair.counterCurrency + "/"
+						+ pair.baseCurrency, bidPxList, askPxList, bidQList,
+						askQList, false);
+				transFac.getPublisher(
+						ETransportType.MARKET_DATA,
+						"MTGOX." + pair.counterCurrency + "/"
+								+ pair.baseCurrency).send(bm.toByteArray());
+			}
+			Thread.sleep(20000);
+
+		}
+		//
+
+	}
 
 	/**
 	 * 
@@ -72,17 +96,20 @@ public class MtGoxFeed extends ComponentBase {
 	public String getDescription() {
 		return "Initializes BTC MDIs";
 	}
-	
+
 	/**
-	 * It is possible to run components from within a ComponentServer or from a main. 
+	 * It is possible to run components from within a ComponentServer or from a
+	 * main.
+	 * 
 	 * @param args
-	 * @throws Exception 
-	 * @throws BeansException 
+	 * @throws Exception
+	 * @throws BeansException
 	 */
-	public static void main(String[] args) throws BeansException, Exception{
-		// first, let's get the spring context. 
+	public static void main(String[] args) throws BeansException, Exception {
+		// first, let's get the spring context.
 		ApplicationContext appContext = new ClassPathXmlApplicationContext(
 				new String[] { "fwspring.xml" });
-		new MtGoxFeed(appContext.getBean(ITransportFactory.class), appContext.getBean(IDaoFactory.class));
+		new MtGoxFeed(appContext.getBean(ITransportFactory.class),
+				appContext.getBean(IDaoFactory.class));
 	}
 }
