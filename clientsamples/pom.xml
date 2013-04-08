@@ -16,12 +16,12 @@
 
   <repositories>
      <repository>
-        <id>aq2o</id>
-        <url>http://oss.sonatype.org/content/repositories/snapshots/</url>
-     </repository>
+			<id>aq3rdparty</id>
+			<url>http://activequant.org/m2/3rdparty</url>
+		</repository>
   </repositories>
-
-
+  
+  
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
