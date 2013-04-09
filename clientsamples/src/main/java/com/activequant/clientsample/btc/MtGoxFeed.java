@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.activequant.messages.AQMessages;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -42,59 +43,52 @@ public class MtGoxFeed extends ComponentBase {
 		PollingMarketDataService marketDataService = mtGox
 				.getPollingMarketDataService();
 
-		
-
 		while (true) {
-
 			List<CurrencyPair> pairs = marketDataService.getExchangeSymbols();
-
 			for (CurrencyPair pair : pairs) {
-				if(pair.counterCurrency.equals("BTC"))continue; 
-				//
-				System.out.println(pair);
-				//
-				List<Double> bidPxList = new ArrayList<Double>();
-				List<Double> askPxList = new ArrayList<Double>();
-				List<Double> bidQList = new ArrayList<Double>();
-				List<Double> askQList = new ArrayList<Double>();
-				//
-				Ticker ticker = marketDataService.getTicker(pair.baseCurrency,
-                        pair.counterCurrency);
-				Double bid = ticker.getBid().getAmount().doubleValue();
-				Double ask = ticker.getAsk().getAmount().doubleValue();
-				//
-				bidPxList.clear();
-				askPxList.clear();
-				bidQList.clear();
-				askQList.clear();
-				//
-				bidPxList.add(bid);
-				askPxList.add(ask);
-				bidQList.add(100000.0);
-				askQList.add(100000.0);
-				//
-				System.out.println(ticker);
-				BaseMessage bm = mf.buildMds("MTGOX." + pair.baseCurrency + "/"
-						+ pair.counterCurrency, bidPxList, askPxList, bidQList,
-						askQList, false);
-				transFac.getPublisher(
-						ETransportType.MARKET_DATA,
-						"MTGOX." + pair.baseCurrency + "/"
-								+ pair.counterCurrency).send(bm.toByteArray());
+				if (pair.counterCurrency.equals("BTC")) continue;
+                retrieveAndPublishTicker(marketDataService, pair);
 			}
 			Thread.sleep(20000);
-
 		}
-		//
-
 	}
 
-	/**
+    private void retrieveAndPublishTicker(PollingMarketDataService marketDataService, CurrencyPair pair) throws Exception {
+        List<Double> bidPxList = new ArrayList<Double>();
+        List<Double> askPxList = new ArrayList<Double>();
+        List<Double> bidQList = new ArrayList<Double>();
+        List<Double> askQList = new ArrayList<Double>();
+        //
+        Ticker ticker = marketDataService.getTicker(pair.baseCurrency, pair.counterCurrency);
+        Double bid = ticker.getBid().getAmount().doubleValue();
+        Double ask = ticker.getAsk().getAmount().doubleValue();
+        //
+        bidPxList.clear();
+        askPxList.clear();
+        bidQList.clear();
+        askQList.clear();
+        //
+        bidPxList.add(bid);
+        askPxList.add(ask);
+        bidQList.add(100000.0);
+        askQList.add(100000.0);
+        //
+        System.out.println(ticker);
+        BaseMessage bm = mf.buildMds("MTGOX." + pair.baseCurrency + "/"
+                + pair.counterCurrency, bidPxList, askPxList, bidQList,
+                askQList, false);
+        transFac.getPublisher(
+                ETransportType.MARKET_DATA,
+                "MTGOX." + pair.baseCurrency + "/"
+                        + pair.counterCurrency).send(bm.toByteArray());
+    }
+
+    /**
 	 * 
 	 */
 	@Override
 	public String getDescription() {
-		return "Initializes BTC MDIs";
+		return "Retrieves and publishes MtGox BTC tickers";
 	}
 
 	/**
